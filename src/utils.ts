@@ -11,7 +11,7 @@ export function getCursorPosition(
   return { x, y };
 }
 
-export function getParalellogrammCords(points: Point[]): Point[] {
+export function getParallelogrammeCords(points: Point[]): Point[] {
   if (points.length < 3) {
     // @TODO: сделать подоходяшую ошибку
     return points;
@@ -27,5 +27,19 @@ export function getParalellogrammCords(points: Point[]): Point[] {
   d.x = a.x + c.x - b.x;
   d.y = a.y + c.y - b.y;
 
-  return [d, ...points];
+  return [...points, d];
+}
+
+export function getDistance(a: Point, b: Point): number {
+  const dist = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+
+  return dist;
+}
+
+export function getParallelogrammeArea(points: Point[]): number {
+  const [a, b, c, d] = points;
+  // const base = ;
+  const height = c.y - a.y;
+
+  return 42;
 }

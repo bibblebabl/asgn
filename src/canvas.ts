@@ -37,19 +37,46 @@ export class Canvas {
     this.canvas.addEventListener(eventType, handler);
   }
 
+  drawRect({
+    x,
+    y,
+    width,
+    height
+  }: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }) {
+    // if (rect.fillStyle) {
+    //     this.fillStyle = rect.fillStyle;
+    //     this.context.fillRect(rect.x, rect.y, rect.width, rect.height);
+    // }
+
+    // if (rect.strokeStyle && rect.lineWidth) {
+    //     this.strokeStyle = rect.strokeStyle;
+    //     this.lineWidth = rect.lineWidth;
+
+    // }
+
+    this.ctx.strokeRect(x, y, width, height);
+
+    return this;
+  }
+
   drawCircle({
     x,
     y,
     radius,
-    startAngle,
-    endAngle,
+    startAngle = 0,
+    endAngle = 360,
     isAntiClockwise = true
   }: {
     x: number;
     y: number;
     radius: number;
-    startAngle: number;
-    endAngle: number;
+    startAngle?: number;
+    endAngle?: number;
     isAntiClockwise?: boolean;
   }) {
     this.ctx.beginPath();
@@ -63,6 +90,9 @@ export class Canvas {
       isAntiClockwise
     );
 
+    this.ctx.strokeStyle = "red";
+
+    this.ctx.closePath();
     this.ctx.stroke();
 
     return this;
@@ -75,12 +105,22 @@ export class Canvas {
 
     this.ctx.moveTo(startPoint.x, startPoint.y);
 
+    this.ctx.strokeStyle = "blue";
+
     for (let point of restPoints) {
       this.ctx.lineTo(point.x, point.y);
     }
 
     this.ctx.closePath();
+    this.ctx.stroke();
 
     return this;
+  }
+
+  drawTooltip(point: Point, index: string) {
+    this.ctx.font = "12px monospace";
+    this.ctx.fillText(`index: ${index}`, point.x + 10, point.y + 5);
+    this.ctx.fillText(`x: ${point.x}`, point.x + 10, point.y + 20);
+    this.ctx.fillText(`y: ${point.y}`, point.x + 10, point.y + 35);
   }
 }
