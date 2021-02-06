@@ -1,3 +1,5 @@
+import { Point } from "./types";
+
 export class Canvas {
   static degreesToRadians(degrees: number) {
     // 1 radian = 57.2957795 degrees
@@ -62,6 +64,22 @@ export class Canvas {
     );
 
     this.ctx.stroke();
+
+    return this;
+  }
+
+  drawParallelogram(points: Point[]) {
+    const [startPoint, ...restPoints] = points;
+
+    this.ctx.beginPath();
+
+    this.ctx.moveTo(startPoint.x, startPoint.y);
+
+    for (let point of restPoints) {
+      this.ctx.lineTo(point.x, point.y);
+    }
+
+    this.ctx.closePath();
 
     return this;
   }
