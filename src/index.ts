@@ -57,12 +57,11 @@ function onMouseDown(event: MouseEvent) {
 
     canvas.drawParallelogram(circles);
 
-    console.log(getDistance(a, c));
-    console.log(getDistance(b, d));
+    canvas.drawTooltip(pointToDraw, "D");
 
     const center = {
-      x: a.x + getDistance(a, c) / 2,
-      y: b.y + getDistance(b, d) / 2
+      x: (a.x + c.x) / 2,
+      y: (a.y + c.y) / 2
     };
 
     canvas.drawTooltip(center, "CENTER");
@@ -72,8 +71,6 @@ function onMouseDown(event: MouseEvent) {
       y: center.y,
       radius: 100 / 2
     });
-
-    canvas.drawTooltip(pointToDraw, "D");
   }
 }
 
