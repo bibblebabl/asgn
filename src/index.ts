@@ -9,7 +9,10 @@ import { MAX_CIRCLES_COUNT, CIRCLE_SIZE } from "./const";
 import { Point } from "./types";
 
 document.getElementById("app").innerHTML = `
+<header class="header">
 <h1 class="heading">Drawer</h1>
+<button class="reset" type="button">reset</button>
+</header>
 `;
 
 enum Alphabet {
@@ -75,3 +78,10 @@ function onMouseDown(event: MouseEvent) {
 }
 
 canvas.on("mousedown", onMouseDown);
+
+document.body
+  .querySelector("button.reset")
+  .addEventListener("mousedown", () => {
+    canvas.reset();
+    circles = [];
+  });

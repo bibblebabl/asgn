@@ -37,6 +37,10 @@ export class Canvas {
     this.canvas.addEventListener(eventType, handler);
   }
 
+  reset() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
   drawRect({
     x,
     y,
