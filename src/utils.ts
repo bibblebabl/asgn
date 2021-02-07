@@ -38,8 +38,14 @@ export function getDistance(a: Point, b: Point): number {
 
 export function getParallelogrammeArea(points: Point[]): number {
   const [a, b, c, d] = points;
-  // const base = ;
-  const height = c.y - a.y;
 
-  return 42;
+  const distAB = getDistance(a, b);
+  const distBC = getDistance(b, c);
+  const distBD = getDistance(b, d);
+
+  // Также площадь параллелограмма может быть выражена через стороны {\displaystyle a,\ b}a,\ b и длину любой из диагоналей {\displaystyle d}d по формуле Герона как сумма площадей двух равных примыкающих треугольников:
+  const p = (distAB + distBC + distBD) / 2;
+  const S = 2 * Math.sqrt(p * (p - distAB) * (p - distBC) * (p - distBD));
+
+  return S;
 }

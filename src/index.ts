@@ -3,6 +3,7 @@ import { Canvas } from "./canvas";
 import {
   getCursorPosition,
   getDistance,
+  getParallelogrammeArea,
   getParallelogrammeCords
 } from "./utils";
 import { MAX_CIRCLES_COUNT, CIRCLE_SIZE } from "./const";
@@ -60,6 +61,10 @@ function onMouseDown(event: MouseEvent) {
 
     canvas.drawParallelogram(circles);
 
+    const circleS = getParallelogrammeArea(circles);
+
+    const circleRadius = Math.sqrt(circleS / Math.PI);
+
     canvas.drawTooltip(pointToDraw, "D");
 
     const center = {
@@ -72,7 +77,7 @@ function onMouseDown(event: MouseEvent) {
     canvas.drawCircle({
       x: center.x,
       y: center.y,
-      radius: 100 / 2
+      radius: circleRadius
     });
   }
 }
