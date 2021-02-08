@@ -3,6 +3,7 @@ export enum Shapes {
   PARALLELOGRAM = "PARALLELOGRAM"
 }
 
-export const CIRCLE_SIZE = 11;
+export const CIRCLE_DIAMETER = 11;
+export const CIRCLE_RADIUS = CIRCLE_DIAMETER / 2;
 
 export const MAX_CIRCLES_COUNT = 3;

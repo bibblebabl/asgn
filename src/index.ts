@@ -6,7 +6,7 @@ import {
   getParallelogrammeArea,
   getParallelogrammeCords
 } from "./utils";
-import { MAX_CIRCLES_COUNT, CIRCLE_SIZE } from "./const";
+import { MAX_CIRCLES_COUNT, CIRCLE_RADIUS, CIRCLE_DIAMETER } from "./const";
 import { Point } from "./types";
 
 document.getElementById("app").innerHTML = `
@@ -38,7 +38,7 @@ function onMouseDown(event: MouseEvent) {
   canvas.drawCircle({
     x: pointToDraw.x,
     y: pointToDraw.y,
-    radius: CIRCLE_SIZE / 2,
+    radius: CIRCLE_RADIUS,
     startAngle: 0,
     endAngle: 360
   });
@@ -54,7 +54,7 @@ function onMouseDown(event: MouseEvent) {
     canvas.drawCircle({
       x: pointToDraw.x,
       y: pointToDraw.y,
-      radius: CIRCLE_SIZE / 2
+      radius: CIRCLE_RADIUS
     });
 
     circles.push(pointToDraw);
@@ -82,7 +82,36 @@ function onMouseDown(event: MouseEvent) {
   }
 }
 
-canvas.on("mousedown", onMouseDown);
+function reSize(event: MouseEvent) {
+  const cursor = getCursorPosition(canvas.element, event);
+
+  // const point = circles.find(
+  //   (el) =>
+  //     el.x - CIRCLE_RADIUS <= cursor.x <= el.x + CIRCLE_RADIUS &&
+  //     el.y - CIRCLE_RADIUS <= cursor.y <= el.y + CIRCLE_RADIUS
+  // );
+
+  for (var i = 0; i < circles.length; i++) {
+    const currentCircle = circles[i];
+    var dx = cursor.x - currentCircle.x;
+    var dy = cursor.y - currentCircle.y;
+    var isIn = dx * dx + dy * dy < CIRCLE_DIAMETER;
+    if (isIn) {
+      alert(
+        `You clicked in the " + x: ${currentCircle.x} y: ${currentCircle.y}`
+      );
+    }
+  }
+
+  console.log(cursor);
+}
+
+canvas.on("mousedown", (event: MouseEvent) => {
+  const handler =
+    circles.length === MAX_CIRCLES_COUNT + 1 ? reSize : onMouseDown;
+
+  handler(event);
+});
 
 document.body
   .querySelector("button.reset")
