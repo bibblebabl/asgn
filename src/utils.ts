@@ -49,3 +49,5 @@ export function getParallelogrammeArea(points: Point[]): number {
 
   return S;
 }
+
+function getDragDirection() {}

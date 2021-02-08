@@ -43,7 +43,7 @@ function drawSingleCircle(pointToDraw: Point, index: number) {
     endAngle: 360
   });
 
-  canvas.drawTooltip(pointToDraw, Alphabet[circles.length]);
+  canvas.drawTooltip(pointToDraw, Alphabet[index]);
 }
 
 function drawFullShape() {
@@ -130,7 +130,6 @@ canvas.on("mouseup", (event: MouseEvent) => {
 canvas.on("mousemove", (event: MouseEvent) => {
   if (isDragging) {
     const cursorPosition = getCursorPosition(canvas.element, event);
-    // console.log(cursorPosition);
 
     if (draggingCircleIndex && draggingCircle) {
       const change = {
@@ -140,20 +139,22 @@ canvas.on("mousemove", (event: MouseEvent) => {
 
       console.log(change);
 
-      // const oppositePointIndex =
-      //   draggingCircleIndex - 2 < 0
-      //     ? draggingCircleIndex + 2
-      //     : draggingCircleIndex - 2;
-      // const oppositePoint = circles[oppositePointIndex];
+      const prevIndex =
+        draggingCircleIndex - 1 < 0 ? 4 : draggingCircleIndex - 1;
+      const nextIndex =
+        draggingCircleIndex + 1 > 4 ? 0 : draggingCircleIndex + 1;
+
+      console.log(prevIndex, nextIndex);
 
       circles[draggingCircleIndex] = cursorPosition;
 
-      // console.log(oppositePoint);
-
       canvas.reset();
+
       drawFullShape();
 
-      // circles.forEach((circle, index) => drawSingleCircle(circle, index));
+      for (let index = 0; index < circles.length; index++) {
+        drawSingleCircle(circles[index], index);
+      }
     }
   }
 });
