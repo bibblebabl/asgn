@@ -72,6 +72,7 @@ function drawMainCircle() {
 }
 
 function drawHandler(pointToDraw: Point) {
+  console.log(points.length)
   drawPoint(pointToDraw, points.length)
   points.push(pointToDraw)
 
@@ -81,29 +82,30 @@ function drawHandler(pointToDraw: Point) {
   }
 }
 
-function onMouseDown(event: MouseEvent) {
+function handlePoint(event: MouseEvent) {
   const point = getCursorPosition(canvas.element, event)
-  let pointToDraw = point
 
-  drawHandler(pointToDraw)
+  drawHandler(point)
 }
 
-function reSize(event: MouseEvent) {
+function handleResize(event: MouseEvent) {
   const cursor = getCursorPosition(canvas.element, event)
 
-  for (var i = 0; i < points.length; i++) {
-    const currentCircle = points[i]
-    var dx = cursor.x - currentCircle.x
-    var dy = cursor.y - currentCircle.y
-    var isIn = dx * dx + dy * dy < CIRCLE_DIAMETER
+  console.log(points.length)
+
+  points.forEach((point, index) => {
+    const dx = cursor.x - point.x
+    const dy = cursor.y - point.y
+    const isIn = dx * dx + dy * dy < CIRCLE_DIAMETER
+
     if (isIn) {
-      draggingCircleIndex = i
+      draggingCircleIndex = index
     }
-  }
+  })
 }
 
 canvas.on('mousedown', (event: MouseEvent) => {
-  const mouseDownHandler = points.length === MAX_CIRCLES_COUNT + 1 ? reSize : onMouseDown
+  const mouseDownHandler = points.length === MAX_CIRCLES_COUNT + 1 ? handleResize : handlePoint
   isDragging = true
   mouseDownHandler(event)
 })
@@ -117,14 +119,22 @@ canvas.on('mousemove', (event: MouseEvent) => {
   if (isDragging) {
     const cursorPosition = getCursorPosition(canvas.element, event)
 
-    if (draggingCircleIndex) {
-      console.log(cursorPosition)
-      console.log(draggingCircleIndex)
-      console.log(points[draggingCircleIndex])
+    console.log(`before`, points[draggingCircleIndex])
 
-      points[draggingCircleIndex].x = cursorPosition.x
-      points[draggingCircleIndex].y = cursorPosition.y
+    if (draggingCircleIndex) {
+      points = points.map((point, index) => {
+        if (index === draggingCircleIndex) {
+          return {
+            x: cursorPosition.x,
+            y: cursorPosition.y,
+          }
+        }
+
+        return point
+      })
     }
+
+    console.log(`after`, points[draggingCircleIndex])
   }
 })
 
