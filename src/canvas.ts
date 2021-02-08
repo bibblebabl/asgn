@@ -34,7 +34,7 @@ export class Canvas {
   }
 
   on(eventType: any, handler: any) {
-    this.canvas.addEventListener(eventType, handler);
+    this.canvas.addEventListener(eventType, handler, false);
   }
 
   reset() {
