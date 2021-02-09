@@ -104,39 +104,46 @@ function handleResize(event: MouseEvent) {
   })
 }
 
-canvas.on('mousedown', (event: MouseEvent) => {
-  const mouseDownHandler = points.length === MAX_CIRCLES_COUNT + 1 ? handleResize : handlePoint
-  isDragging = true
-  mouseDownHandler(event)
-})
-
-canvas.on('mouseup', () => {
-  isDragging = false
-  draggingCircleIndex = null
-})
-
-canvas.on('mousemove', (event: MouseEvent) => {
+function onMouseMove(event: MouseEvent) {
   if (isDragging) {
     const cursorPosition = getCursorPosition(canvas.element, event)
 
-    console.log(`before`, points[draggingCircleIndex])
-
     if (draggingCircleIndex) {
-      points = points.map((point, index) => {
-        if (index === draggingCircleIndex) {
-          return {
-            x: cursorPosition.x,
-            y: cursorPosition.y,
-          }
-        }
+      points[draggingCircleIndex].x = cursorPosition.x
+      points[draggingCircleIndex].y = cursorPosition.y
 
-        return point
-      })
+      canvas.reset()
+      canvas.drawParallelogram(points)
+
+      points.forEach((point) =>
+        canvas.drawCircle({
+          x: point.x,
+          y: point.y,
+          radius: CIRCLE_RADIUS,
+        })
+      )
+
+      drawMainCircle()
     }
-
-    console.log(`after`, points[draggingCircleIndex])
   }
-})
+}
+
+function onMouseDown(event: MouseEvent) {
+  const mouseDownHandler = points.length === MAX_CIRCLES_COUNT + 1 ? handleResize : handlePoint
+  isDragging = true
+  mouseDownHandler(event)
+}
+
+function onMouseUp() {
+  isDragging = false
+  draggingCircleIndex = null
+}
+
+canvas.on('mousedown', onMouseDown)
+
+canvas.on('mouseup', onMouseUp)
+
+canvas.on('mousemove', onMouseMove)
 
 document.body.querySelector('button.reset').addEventListener('mousedown', () => {
   canvas.reset()
