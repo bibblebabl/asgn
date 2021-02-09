@@ -72,7 +72,6 @@ function drawMainCircle() {
 }
 
 function drawHandler(pointToDraw: Point) {
-  console.log(points.length)
   drawPoint(pointToDraw, points.length)
   points.push(pointToDraw)
 
@@ -88,10 +87,8 @@ function handlePoint(event: MouseEvent) {
   drawHandler(point)
 }
 
-function handleResize(event: MouseEvent) {
+function setDraggingPoint(event: MouseEvent) {
   const cursor = getCursorPosition(canvas.element, event)
-
-  console.log(points.length)
 
   points.forEach((point, index) => {
     const dx = cursor.x - point.x
@@ -108,7 +105,8 @@ function onMouseMove(event: MouseEvent) {
   if (isDragging) {
     const cursorPosition = getCursorPosition(canvas.element, event)
 
-    if (draggingCircleIndex) {
+    if (draggingCircleIndex !== null) {
+      console.log(draggingCircleIndex)
       points[draggingCircleIndex].x = cursorPosition.x
       points[draggingCircleIndex].y = cursorPosition.y
 
@@ -129,9 +127,14 @@ function onMouseMove(event: MouseEvent) {
 }
 
 function onMouseDown(event: MouseEvent) {
-  const mouseDownHandler = points.length === MAX_CIRCLES_COUNT + 1 ? handleResize : handlePoint
   isDragging = true
-  mouseDownHandler(event)
+
+  if (points.length <= MAX_CIRCLES_COUNT) {
+    handlePoint(event)
+    return
+  }
+
+  setDraggingPoint(event)
 }
 
 function onMouseUp() {
