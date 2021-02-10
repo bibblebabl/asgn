@@ -6,6 +6,5 @@ export type Point = {
 export type State = {
   points: Point[]
   isDragging: Boolean
-  draggingCircle: Point | null
   draggingCircleIndex: number | null
 }

@@ -2,7 +2,7 @@ import { MAX_CIRCLES_COUNT, CIRCLE_DIAMETER } from './const'
 import { Canvas } from './canvas'
 import { View } from './view'
 import { State, Point } from './types'
-import { getParallelogrammeCords } from './utils'
+import { getParallelogramCords } from './utils'
 
 const canvas = new Canvas(document.getElementById('canvas') as HTMLCanvasElement)
 
@@ -10,7 +10,6 @@ export class App {
   state: State = {
     points: [],
     isDragging: false,
-    draggingCircle: null,
     draggingCircleIndex: null,
   }
 
@@ -30,10 +29,7 @@ export class App {
     const { points, draggingCircleIndex } = this.state
 
     if (draggingCircleIndex !== null) {
-      // const prevPointIndex = draggingCircleIndex - 1 < 0 ? 4 : draggingCircleIndex - 1
-
-      console.log(draggingCircleIndex)
-      const nextPointIndex = draggingCircleIndex + 1 > 4 ? 0 : draggingCircleIndex + 1
+      const nextPointIndex = draggingCircleIndex < MAX_CIRCLES_COUNT ? draggingCircleIndex + 1 : 0
 
       const diffX = cursorPosition.x - points[draggingCircleIndex].x
       const diffY = cursorPosition.y - points[draggingCircleIndex].y
@@ -55,7 +51,7 @@ export class App {
       this.state.points.push(point)
 
       if (points.length === MAX_CIRCLES_COUNT) {
-        const [, , , lastPoint] = getParallelogrammeCords(points)
+        const [, , , lastPoint] = getParallelogramCords(points)
         points.push(lastPoint)
         this.view.drawPoint(lastPoint, 3)
         this.view.drawParallelogram(points)
@@ -68,12 +64,12 @@ export class App {
   }
 
   onMouseMove(event: MouseEvent) {
-    const { isDragging, draggingCircle, draggingCircleIndex } = this.state
+    const { isDragging, draggingCircleIndex } = this.state
 
     if (isDragging) {
       const cursorPosition = this.view.getCursorPosition(event)
 
-      if (draggingCircleIndex !== null && draggingCircle) {
+      if (draggingCircleIndex !== null) {
         this.updatePointsPositions(cursorPosition)
 
         this.view.reDraw(this.state.points)
@@ -83,7 +79,6 @@ export class App {
 
   onMouseUp() {
     this.state.isDragging = false
-    this.state.draggingCircle = null
     this.state.draggingCircleIndex = null
   }
 
@@ -96,7 +91,6 @@ export class App {
       const isIn = dx * dx + dy * dy < CIRCLE_DIAMETER
 
       if (isIn) {
-        this.state.draggingCircle = point
         this.state.draggingCircleIndex = index
       }
     })
