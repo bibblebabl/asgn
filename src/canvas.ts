@@ -1,8 +1,8 @@
+import { Colors } from './const'
 import { Point } from './types'
 
 export class Canvas {
   static degreesToRadians(degrees: number) {
-    // 1 radian = 57.2957795 degrees
     return (Math.PI / 180) * degrees
   }
 
@@ -24,6 +24,10 @@ export class Canvas {
     return this.canvas
   }
 
+  set font(font: string) {
+    this.ctx.font = font
+  }
+
   private init() {
     this.canvas.width = window.innerWidth
     this.canvas.height = window.innerHeight
@@ -35,23 +39,6 @@ export class Canvas {
 
   on(eventType: any, handler: any) {
     this.canvas.addEventListener(eventType, handler, false)
-  }
-
-  drawRect({ x, y, width, height }: { x: number; y: number; width: number; height: number }) {
-    // if (rect.fillStyle) {
-    //     this.fillStyle = rect.fillStyle;
-    //     this.context.fillRect(rect.x, rect.y, rect.width, rect.height);
-    // }
-
-    // if (rect.strokeStyle && rect.lineWidth) {
-    //     this.strokeStyle = rect.strokeStyle;
-    //     this.lineWidth = rect.lineWidth;
-
-    // }
-
-    this.ctx.strokeRect(x, y, width, height)
-
-    return this
   }
 
   drawCircle({
@@ -80,7 +67,7 @@ export class Canvas {
       isAntiClockwise
     )
 
-    this.ctx.strokeStyle = 'red'
+    this.ctx.strokeStyle = Colors.POINT_CIRCLE
 
     this.ctx.closePath()
     this.ctx.stroke()
@@ -95,7 +82,7 @@ export class Canvas {
 
     this.ctx.moveTo(startPoint.x, startPoint.y)
 
-    this.ctx.strokeStyle = 'blue'
+    this.ctx.strokeStyle = Colors.PARALLELOGRAM
 
     for (let point of restPoints) {
       this.ctx.lineTo(point.x, point.y)
@@ -108,7 +95,6 @@ export class Canvas {
   }
 
   drawText(text: string, x: number, y: number) {
-    this.ctx.font = '12px monospace'
     this.ctx.fillText(text, x, y)
   }
 

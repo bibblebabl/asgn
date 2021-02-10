@@ -1,3 +1,4 @@
+import { MAX_POINTS_COUNT } from './const'
 import { Point } from './types'
 
 export function getCursorPosition(canvas: HTMLCanvasElement, event: MouseEvent): Point {
@@ -9,42 +10,37 @@ export function getCursorPosition(canvas: HTMLCanvasElement, event: MouseEvent):
 }
 
 export function getParallelogramCords(points: Point[]): Point[] {
-  if (points.length < 3) {
-    // @TODO: сделать подоходяшую ошибку
+  if (points.length < MAX_POINTS_COUNT) {
     return points
   }
 
-  const d: Point = {
+  const lastPoint: Point = {
     x: 0,
     y: 0,
   }
 
   const [a, b, c] = points
 
-  d.x = a.x + c.x - b.x
-  d.y = a.y + c.y - b.y
+  lastPoint.x = a.x + c.x - b.x
+  lastPoint.y = a.y + c.y - b.y
 
-  return [...points, d]
+  return [...points, lastPoint]
 }
 
 export function getDistance(a: Point, b: Point): number {
-  const dist = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2))
-
-  return dist
+  return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2))
 }
 
-export function getParallelogrammeArea(points: Point[]): number {
+export function getParallelogramArea(points: Point[]): number {
   const [a, b, c, d] = points
 
   const distAB = getDistance(a, b)
   const distBC = getDistance(b, c)
   const distBD = getDistance(b, d)
 
-  // Также площадь параллелограмма может быть выражена через стороны {\displaystyle a,\ b}a,\ b и длину любой из диагоналей {\displaystyle d}d по формуле Герона как сумма площадей двух равных примыкающих треугольников:
+  // calculating using Heron's formula
   const p = (distAB + distBC + distBD) / 2
   const S = 2 * Math.sqrt(p * (p - distAB) * (p - distBC) * (p - distBD))
 
   return S
 }
-
-function getDragDirection() {}

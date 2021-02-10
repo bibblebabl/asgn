@@ -9,4 +9,4 @@ document.getElementById('app').innerHTML = `
   </header>
 `
 
-const app = new App()
+new App()

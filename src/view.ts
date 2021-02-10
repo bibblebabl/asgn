@@ -1,7 +1,7 @@
 import { Canvas } from './canvas'
 import { Point } from './types'
-import { CIRCLE_RADIUS } from './const'
-import { getCursorPosition, getParallelogrammeArea, getParallelogrammeCords } from './utils'
+import { POINT_CIRCLE_RADIUS } from './const'
+import { getCursorPosition, getParallelogramArea, getParallelogramCords } from './utils'
 
 type Props = {
   onMouseDown: (event: MouseEvent) => void
@@ -17,6 +17,8 @@ export class View {
     canvas.on('mousedown', onMouseDown)
     canvas.on('mouseup', onMouseUp)
     canvas.on('mousemove', onMouseMove)
+
+    this.canvas.font = '12px monospace'
   }
 
   getCursorPosition(event: MouseEvent): Point {
@@ -27,7 +29,7 @@ export class View {
     this.canvas.drawCircle({
       x: point.x,
       y: point.y,
-      radius: CIRCLE_RADIUS,
+      radius: POINT_CIRCLE_RADIUS,
       startAngle: 0,
       endAngle: 360,
     })
@@ -46,10 +48,10 @@ export class View {
   }
 
   drawMainCircle(points: Point[]) {
-    const [a, , c] = getParallelogrammeCords(points)
-    const circleS = getParallelogrammeArea(points)
+    const [a, , c] = getParallelogramCords(points)
+    const circleArea = getParallelogramArea(points)
 
-    const circleRadius = Math.sqrt(circleS / Math.PI)
+    const circleRadius = Math.sqrt(circleArea / Math.PI)
 
     const center = {
       x: (a.x + c.x) / 2,

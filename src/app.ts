@@ -1,4 +1,4 @@
-import { MAX_CIRCLES_COUNT, CIRCLE_DIAMETER } from './const'
+import { MAX_POINTS_COUNT, POINT_CIRCLE_DIAMETER } from './const'
 import { Canvas } from './canvas'
 import { View } from './view'
 import { State, Point } from './types'
@@ -29,7 +29,7 @@ export class App {
     const { points, draggingCircleIndex } = this.state
 
     if (draggingCircleIndex !== null) {
-      const nextPointIndex = draggingCircleIndex < MAX_CIRCLES_COUNT ? draggingCircleIndex + 1 : 0
+      const nextPointIndex = draggingCircleIndex < MAX_POINTS_COUNT ? draggingCircleIndex + 1 : 0
 
       const diffX = cursorPosition.x - points[draggingCircleIndex].x
       const diffY = cursorPosition.y - points[draggingCircleIndex].y
@@ -45,12 +45,12 @@ export class App {
   onMouseDown(event: MouseEvent) {
     const { points, isDragging } = this.state
 
-    if (points.length <= MAX_CIRCLES_COUNT) {
+    if (points.length <= MAX_POINTS_COUNT) {
       const point = this.view.getCursorPosition(event)
       this.view.drawPoint(point, points.length)
       this.state.points.push(point)
 
-      if (points.length === MAX_CIRCLES_COUNT) {
+      if (points.length === MAX_POINTS_COUNT) {
         const [, , , lastPoint] = getParallelogramCords(points)
         points.push(lastPoint)
         this.view.drawPoint(lastPoint, 3)
@@ -58,7 +58,7 @@ export class App {
         this.view.drawMainCircle(points)
       }
     } else {
-      if (!isDragging) this.handleDraggingPoint(event)
+      if (!isDragging) this.handleDrag(event)
       this.state.isDragging = true
     }
   }
@@ -82,13 +82,13 @@ export class App {
     this.state.draggingCircleIndex = null
   }
 
-  handleDraggingPoint(event: MouseEvent) {
+  handleDrag(event: MouseEvent) {
     const cursor = this.view.getCursorPosition(event)
 
     this.state.points.forEach((point, index) => {
       const dx = cursor.x - point.x
       const dy = cursor.y - point.y
-      const isIn = dx * dx + dy * dy < CIRCLE_DIAMETER
+      const isIn = dx * dx + dy * dy < POINT_CIRCLE_DIAMETER
 
       if (isIn) {
         this.state.draggingCircleIndex = index
