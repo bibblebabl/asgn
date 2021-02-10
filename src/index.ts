@@ -1,5 +1,6 @@
 import './style.css'
 import { Canvas } from './canvas'
+import { View } from './view'
 import { getCursorPosition, getParallelogrammeArea, getParallelogrammeCords } from './utils'
 import { MAX_CIRCLES_COUNT, CIRCLE_RADIUS, CIRCLE_DIAMETER, Alphabet } from './const'
 import { Point } from './types'
@@ -10,112 +11,31 @@ document.getElementById('app').innerHTML = `
 <button class="reset" type="button">reset</button>
 </header>
 `
+
 const canvas = new Canvas(document.getElementById('canvas') as HTMLCanvasElement)
 
-let points: Point[] = []
-let isDragging = false
-let draggingCircleIndex: number | null = null
-let draggingCircle: Point | null = null
-
-function drawPoint(pointToDraw: Point, index: number) {
-  canvas.drawCircle({
-    x: pointToDraw.x,
-    y: pointToDraw.y,
-    radius: CIRCLE_RADIUS,
-    startAngle: 0,
-    endAngle: 360,
-  })
-
-  canvas.drawTooltip(pointToDraw, Alphabet[index])
-}
-
-function drawLastPoint(pointsToDraw?: Point[]) {
-  const [, , , d] = getParallelogrammeCords(pointsToDraw || points)
-  const pointToDraw = d
-
-  canvas.drawCircle({
-    x: pointToDraw.x,
-    y: pointToDraw.y,
-    radius: CIRCLE_RADIUS,
-  })
-
-  points.push(pointToDraw)
-
-  canvas.drawParallelogram(points)
-
-  canvas.drawTooltip(pointToDraw, 'D')
-}
-
-function drawMainCircle() {
-  const [a, b, c] = getParallelogrammeCords(points)
-
-  const circleS = getParallelogrammeArea(points)
-
-  const circleRadius = Math.sqrt(circleS / Math.PI)
-
-  const center = {
-    x: (a.x + c.x) / 2,
-    y: (a.y + c.y) / 2,
+class App {
+  state = {
+    points: [],
+    isDragging: false,
+    draggingCircle: null,
+    draggingCircleIndex: null,
   }
 
-  canvas.drawTooltip(center, 'CENTER')
+  view: View
 
-  canvas.drawCircle({
-    x: center.x,
-    y: center.y,
-    radius: circleRadius,
-  })
-}
-
-function drawHandler(pointToDraw: Point) {
-  drawPoint(pointToDraw, points.length)
-  points.push(pointToDraw)
-
-  if (points.length === MAX_CIRCLES_COUNT) {
-    drawLastPoint()
-    drawMainCircle()
-  }
-}
-
-function handlePoint(event: MouseEvent) {
-  const point = getCursorPosition(canvas.element, event)
-
-  drawHandler(point)
-}
-
-function setDraggingPoint(event: MouseEvent) {
-  const cursor = getCursorPosition(canvas.element, event)
-
-  points.forEach((point, index) => {
-    const dx = cursor.x - point.x
-    const dy = cursor.y - point.y
-    const isIn = dx * dx + dy * dy < CIRCLE_DIAMETER
-
-    if (isIn) {
-      draggingCircle = point
-      draggingCircleIndex = index
-    }
-  })
-}
-
-function reDraw() {
-  canvas.reset()
-  canvas.drawParallelogram(points)
-
-  points.forEach((point) =>
-    canvas.drawCircle({
-      x: point.x,
-      y: point.y,
-      radius: CIRCLE_RADIUS,
+  constructor() {
+    this.view = new View(canvas, {
+      onMouseDown: this.onMouseDown.bind(this),
+      onMouseMove: this.onMouseMove.bind(this),
+      onMouseUp: this.onMouseUp.bind(this),
     })
-  )
 
-  drawMainCircle()
-}
+    document.querySelector('button.reset').addEventListener('mousedown', () => this.reset())
+  }
 
-function onMouseMove(event: MouseEvent) {
-  if (isDragging) {
-    const cursorPosition = getCursorPosition(canvas.element, event)
+  updatePointsPositions(cursorPosition: Point) {
+    const { points, draggingCircle, draggingCircleIndex } = this.state
 
     if (draggingCircleIndex !== null && draggingCircle) {
       // const prevPointIndex = draggingCircleIndex - 1 < 0 ? 4 : draggingCircleIndex - 1
@@ -129,37 +49,60 @@ function onMouseMove(event: MouseEvent) {
 
       points[nextPointIndex].x = points[nextPointIndex].x + diffX
       points[nextPointIndex].y = points[nextPointIndex].y + diffY
-
-      reDraw()
     }
   }
-}
 
-function onMouseDown(event: MouseEvent) {
-  if (points.length <= MAX_CIRCLES_COUNT) {
-    handlePoint(event)
-    return
+  onMouseDown(event: MouseEvent) {
+    const { points, isDragging } = this.state
+
+    if (points.length <= MAX_CIRCLES_COUNT) {
+      const point = this.view.getCursorPosition(event)
+
+      this.state.points.push(point)
+      this.view.drawHandler(this.state.points, point)
+    } else {
+      if (!isDragging) this.handleDraggingPoint(event)
+      this.state.isDragging = true
+    }
   }
 
-  console.log(draggingCircle)
+  onMouseMove(event: MouseEvent) {
+    const { isDragging, draggingCircle, draggingCircleIndex } = this.state
 
-  if (!isDragging) setDraggingPoint(event)
-  isDragging = true
+    if (isDragging) {
+      const cursorPosition = this.view.getCursorPosition(event)
+
+      if (draggingCircleIndex !== null && draggingCircle) {
+        this.updatePointsPositions(cursorPosition)
+
+        this.view.reDraw(this.state.points)
+      }
+    }
+  }
+
+  onMouseUp() {
+    this.state.isDragging = false
+    this.state.draggingCircle = null
+    this.state.draggingCircleIndex = null
+  }
+
+  handleDraggingPoint(event: MouseEvent) {
+    const cursor = this.view.getCursorPosition(event)
+
+    this.state.points.forEach((point, index) => {
+      const dx = cursor.x - point.x
+      const dy = cursor.y - point.y
+      const isIn = dx * dx + dy * dy < CIRCLE_DIAMETER
+
+      if (isIn) {
+        this.state.draggingCircle = point
+        this.state.draggingCircleIndex = index
+      }
+    })
+  }
+
+  reset() {
+    this.view.reset()
+    this.state.points = []
+  }
 }
-
-function onMouseUp() {
-  isDragging = false
-  draggingCircle = null
-  draggingCircleIndex = null
-}
-
-canvas.on('mousedown', onMouseDown)
-
-canvas.on('mouseup', onMouseUp)
-
-canvas.on('mousemove', onMouseMove)
-
-document.body.querySelector('button.reset').addEventListener('mousedown', () => {
-  canvas.reset()
-  points = []
-})
