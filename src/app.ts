@@ -27,14 +27,16 @@ export class App {
   }
 
   updatePointsPositions(cursorPosition: Point) {
-    const { points, draggingCircle, draggingCircleIndex } = this.state
+    const { points, draggingCircleIndex } = this.state
 
-    if (draggingCircleIndex !== null && draggingCircle) {
+    if (draggingCircleIndex !== null) {
       // const prevPointIndex = draggingCircleIndex - 1 < 0 ? 4 : draggingCircleIndex - 1
+
+      console.log(draggingCircleIndex)
       const nextPointIndex = draggingCircleIndex + 1 > 4 ? 0 : draggingCircleIndex + 1
 
-      const diffX = cursorPosition.x - draggingCircle.x
-      const diffY = cursorPosition.y - draggingCircle.y
+      const diffX = cursorPosition.x - points[draggingCircleIndex].x
+      const diffY = cursorPosition.y - points[draggingCircleIndex].y
 
       points[draggingCircleIndex].x = cursorPosition.x
       points[draggingCircleIndex].y = cursorPosition.y

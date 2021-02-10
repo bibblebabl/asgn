@@ -1,6 +1,6 @@
 import { Canvas } from './canvas'
 import { Point } from './types'
-import { CIRCLE_RADIUS, Alphabet } from './const'
+import { CIRCLE_RADIUS } from './const'
 import { getCursorPosition, getParallelogrammeArea, getParallelogrammeCords } from './utils'
 
 type Props = {
@@ -32,7 +32,7 @@ export class View {
       endAngle: 360,
     })
 
-    this.drawTooltip(point, Alphabet[index])
+    this.drawTooltip(point, `${index}`)
   }
 
   drawParallelogram(points: Point[]) {
