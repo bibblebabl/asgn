@@ -1,4 +1,3 @@
-import { MAX_POINTS_COUNT } from './const'
 import { Point } from './types'
 
 export function getCursorPosition(canvas: HTMLCanvasElement, event: MouseEvent): Point {
@@ -10,10 +9,6 @@ export function getCursorPosition(canvas: HTMLCanvasElement, event: MouseEvent):
 }
 
 export function getParallelogramCords(points: Point[]): Point[] {
-  if (points.length < MAX_POINTS_COUNT) {
-    return points
-  }
-
   const lastPoint: Point = {
     x: 0,
     y: 0,
@@ -40,7 +35,7 @@ export function getParallelogramArea(points: Point[]): number {
 
   // calculating using Heron's formula
   const p = (distAB + distBC + distBD) / 2
-  const S = 2 * Math.sqrt(p * (p - distAB) * (p - distBC) * (p - distBD))
+  const area = 2 * Math.sqrt(p * (p - distAB) * (p - distBC) * (p - distBD))
 
-  return S
+  return area
 }
