@@ -1,15 +1,93 @@
 body {
   margin: 0;
   padding: 0;
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-variant: tabular-nums;
+
 }
 
-.header {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+.heading {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+  font-family: monospace;
+  font-size: 34px;
+
+  margin: 0;
+  padding: 0;
+
+  pointer-events: none;
+}
+
+.button {
+  background-color: transparent;
+  border: none;
+}
+
+.buttons {
+  position: fixed;
+  right: 20px;
+  top: 30px;
+
+  padding: 0;
+  margin: 0;
+  
   display: flex;
+  flex-direction: column;
   align-items: center;
+  
+  list-style: none;
+}
+
+.button {
+  padding: 0;
+  margin: 0 0 20px 0;
+  font-size: 0;
+  width: 40px;
+  height: 40px;
+
+  background-color: transparent;
+}
+
+.button--close-modal {
+  position: absolute;
+  right: 10px;
+  height: 10px;
+
+  width: 30px;
+  height: 30px;
+}
+
+.modal {
+  position: fixed;
+  display: none;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  
+  transform: translate(-50%, -50%);
+}
+
+.modal--open {
+  display: flex;
+}
+
+
+.modal--about {
+  width: 45%;
+  height: auto;
+  flex-direction: column;
+  font-family: monospace;
+  font-size: 16px;
+
+  
+  background-color: #eeeeee;
+  border: 1px solid #000000;
+}
+
+.button--close-modal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }

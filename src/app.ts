@@ -20,9 +20,9 @@ export class App {
       onMouseDown: this.onMouseDown.bind(this),
       onMouseMove: this.onMouseMove.bind(this),
       onMouseUp: this.onMouseUp.bind(this),
+      onReset: this.reset.bind(this),
+      onAboutMenu: this.onAboutMenu.bind(this),
     })
-
-    document.querySelector('button.reset').addEventListener('mousedown', () => this.reset())
   }
 
   updatePointsPositions(cursorPosition: Point) {
@@ -94,6 +94,10 @@ export class App {
         this.state.draggingCircleIndex = index
       }
     })
+  }
+
+  onAboutMenu() {
+    document.querySelector('.modal--about')?.classList.toggle('modal--open')
   }
 
   reset() {

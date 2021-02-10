@@ -7,11 +7,16 @@ type Props = {
   onMouseDown: (event: MouseEvent) => void
   onMouseUp: (event: MouseEvent) => void
   onMouseMove: (event: MouseEvent) => void
+  onReset: () => void
+  onAboutMenu: () => void
 }
 export class View {
   private canvas: Canvas
 
-  constructor(canvas: Canvas, { onMouseDown, onMouseUp, onMouseMove }: Props) {
+  constructor(
+    canvas: Canvas,
+    { onMouseDown, onMouseUp, onMouseMove, onReset, onAboutMenu }: Props
+  ) {
     this.canvas = canvas
 
     canvas.on('mousedown', onMouseDown)
@@ -19,6 +24,11 @@ export class View {
     canvas.on('mousemove', onMouseMove)
 
     this.canvas.font = '12px monospace'
+
+    document.querySelector('.button--reset')?.addEventListener('mousedown', onReset)
+    document
+      .querySelectorAll('.button--modal-toggle')
+      ?.forEach((el) => el.addEventListener('mousedown', onAboutMenu))
   }
 
   getCursorPosition(event: MouseEvent): Point {
