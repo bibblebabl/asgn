@@ -37,10 +37,6 @@ export class Canvas {
     this.canvas.addEventListener(eventType, handler, false)
   }
 
-  reset() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-  }
-
   drawRect({ x, y, width, height }: { x: number; y: number; width: number; height: number }) {
     // if (rect.fillStyle) {
     //     this.fillStyle = rect.fillStyle;
@@ -111,10 +107,12 @@ export class Canvas {
     return this
   }
 
-  drawTooltip(point: Point, index: string) {
+  drawText(text: string, x: number, y: number) {
     this.ctx.font = '12px monospace'
-    this.ctx.fillText(`index: ${index}`, point.x + 10, point.y + 5)
-    this.ctx.fillText(`x: ${point.x}`, point.x + 10, point.y + 20)
-    this.ctx.fillText(`y: ${point.y}`, point.x + 10, point.y + 35)
+    this.ctx.fillText(text, x, y)
+  }
+
+  reset() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
   }
 }
