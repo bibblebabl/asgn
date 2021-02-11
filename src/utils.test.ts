@@ -1,22 +1,28 @@
-import { Point } from './types'
 import { getParallelogramCords, getDistance, getParallelogramArea } from './utils'
 
 describe(`Util functions are working correctly`, () => {
   it(`${getParallelogramCords} should return array with 4 elements`, () => {
-    expect(
-      getParallelogramCords([
-        { x: 1, y: 1 },
-        { x: 44, y: 44 },
-        { x: 100, y: 100 },
-      ])
-    ).toHaveLength(4)
+    const threePoints = [
+      { x: 1, y: 1 },
+      { x: 44, y: 44 },
+      { x: 100, y: 100 },
+    ]
+
+    const [a, b, c, d] = getParallelogramCords(threePoints)
+
+    const distAB = getDistance(a, b)
+    const distCD = getDistance(c, d)
+    const distBC = getDistance(b, c)
+    const distAD = getDistance(a, d)
+
+    expect(distAB === distCD && distBC === distAD).toBeTruthy()
   })
 
   it(`${getDistance} should calculate correct distance`, () => {
     const a = { x: 392, y: 146 }
     const b = { x: 240, y: 333 }
 
-    expect(getDistance(a, b)).toEqual(240.9834019180574)
+    expect(getDistance(a, b)).toStrictEqual(240.9834019180574)
   })
 
   it(`${getParallelogramArea} should return correct area value`, () => {
@@ -27,6 +33,6 @@ describe(`Util functions are working correctly`, () => {
         { x: 392, y: 228 },
         { x: 522, y: 25 },
       ])
-    ).toEqual(50508.99999999999)
+    ).toStrictEqual(50508.99999999999)
   })
 })

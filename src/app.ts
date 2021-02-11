@@ -4,8 +4,6 @@ import { View } from './view'
 import { State, Point } from './types'
 import { getParallelogramCords } from './utils'
 
-const canvas = new Canvas(document.getElementById('canvas') as HTMLCanvasElement)
-
 export class App {
   state: State = {
     points: [],
@@ -15,7 +13,9 @@ export class App {
 
   view: View
 
-  constructor() {
+  constructor(domElement: HTMLCanvasElement) {
+    const canvas = new Canvas(domElement)
+
     this.view = new View(canvas, {
       onMouseDown: this.onMouseDown.bind(this),
       onMouseMove: this.onMouseMove.bind(this),
