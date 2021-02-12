@@ -1,4 +1,4 @@
-import { Colors } from './const'
+import { StrokeColor } from './const'
 import { Point } from './types'
 
 export class Canvas {
@@ -67,7 +67,7 @@ export class Canvas {
       isAntiClockwise
     )
 
-    this.ctx.strokeStyle = Colors.POINT_CIRCLE
+    this.ctx.strokeStyle = StrokeColor.POINT_CIRCLE
 
     this.ctx.closePath()
     this.ctx.stroke()
@@ -82,7 +82,7 @@ export class Canvas {
 
     this.ctx.moveTo(startPoint.x, startPoint.y)
 
-    this.ctx.strokeStyle = Colors.PARALLELOGRAM
+    this.ctx.strokeStyle = StrokeColor.PARALLELOGRAM
 
     for (let point of restPoints) {
       this.ctx.lineTo(point.x, point.y)
