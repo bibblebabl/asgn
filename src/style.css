@@ -81,9 +81,10 @@ body {
   width: 45%;
   height: auto;
   flex-direction: column;
+  padding: 1em;
+
   font-family: monospace;
   font-size: 16px;
-
   
   background-color: #eeeeee;
   border: 1px solid #000000;
