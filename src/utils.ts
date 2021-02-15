@@ -8,7 +8,7 @@ export function getCursorPosition(canvas: HTMLCanvasElement, event: MouseEvent):
   return { x, y }
 }
 
-export function getParallelogramCords(points: Point[]): Point[] {
+export function getParallelogramPoints(points: Point[]): Point[] {
   const lastPoint: Point = {
     x: 0,
     y: 0,

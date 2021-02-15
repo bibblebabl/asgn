@@ -1,14 +1,14 @@
-import { MAX_POINTS_COUNT, POINT_CIRCLE_DIAMETER } from './const'
+import { POINTS_TO_DRAW_SHAPE, POINT_CIRCLE_DIAMETER } from './const'
 import { Canvas } from './canvas'
 import { View } from './view'
 import { State, Point } from './types'
-import { getParallelogramCords } from './utils'
+import { getParallelogramPoints } from './utils'
 
 export class App {
   state: State = {
     points: [],
     isDragging: false,
-    draggingCircleIndex: null,
+    draggingPointIndex: null,
   }
 
   view: View
@@ -25,17 +25,17 @@ export class App {
     })
   }
 
-  updatePointsPositions(cursorPosition: Point) {
-    const { points, draggingCircleIndex } = this.state
+  updatePointsCoordinates(cursorPosition: Point) {
+    const { points, draggingPointIndex } = this.state
 
-    if (draggingCircleIndex !== null) {
-      const nextPointIndex = draggingCircleIndex < MAX_POINTS_COUNT ? draggingCircleIndex + 1 : 0
+    if (draggingPointIndex !== null) {
+      const nextPointIndex = draggingPointIndex < POINTS_TO_DRAW_SHAPE ? draggingPointIndex + 1 : 0
 
-      const diffX = cursorPosition.x - points[draggingCircleIndex].x
-      const diffY = cursorPosition.y - points[draggingCircleIndex].y
+      const diffX = cursorPosition.x - points[draggingPointIndex].x
+      const diffY = cursorPosition.y - points[draggingPointIndex].y
 
-      points[draggingCircleIndex].x = cursorPosition.x
-      points[draggingCircleIndex].y = cursorPosition.y
+      points[draggingPointIndex].x = cursorPosition.x
+      points[draggingPointIndex].y = cursorPosition.y
 
       points[nextPointIndex].x = points[nextPointIndex].x + diffX
       points[nextPointIndex].y = points[nextPointIndex].y + diffY
@@ -45,13 +45,13 @@ export class App {
   onMouseDown(event: MouseEvent) {
     const { points, isDragging } = this.state
 
-    if (points.length <= MAX_POINTS_COUNT) {
+    if (points.length < POINTS_TO_DRAW_SHAPE) {
       const point = this.view.getCursorPosition(event)
       this.view.drawPoint(point, points.length)
       this.state.points.push(point)
 
-      if (points.length === MAX_POINTS_COUNT) {
-        const [, , , lastPoint] = getParallelogramCords(points)
+      if (points.length === POINTS_TO_DRAW_SHAPE) {
+        const [, , , lastPoint] = getParallelogramPoints(points)
         points.push(lastPoint)
         this.view.drawPoint(lastPoint, 3)
         this.view.drawParallelogram(points)
@@ -64,13 +64,13 @@ export class App {
   }
 
   onMouseMove(event: MouseEvent) {
-    const { isDragging, draggingCircleIndex } = this.state
+    const { points, isDragging, draggingPointIndex } = this.state
 
-    if (isDragging) {
+    if (isDragging && points.length > POINTS_TO_DRAW_SHAPE) {
       const cursorPosition = this.view.getCursorPosition(event)
 
-      if (draggingCircleIndex !== null) {
-        this.updatePointsPositions(cursorPosition)
+      if (draggingPointIndex !== null) {
+        this.updatePointsCoordinates(cursorPosition)
 
         this.view.reDraw(this.state.points)
       }
@@ -79,7 +79,7 @@ export class App {
 
   onMouseUp() {
     this.state.isDragging = false
-    this.state.draggingCircleIndex = null
+    this.state.draggingPointIndex = null
   }
 
   handleDrag(event: MouseEvent) {
@@ -91,7 +91,7 @@ export class App {
       const isIn = dx * dx + dy * dy < POINT_CIRCLE_DIAMETER
 
       if (isIn) {
-        this.state.draggingCircleIndex = index
+        this.state.draggingPointIndex = index
       }
     })
   }

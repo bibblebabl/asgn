@@ -1,14 +1,14 @@
-import { getParallelogramCords, getDistance, getParallelogramArea } from './utils'
+import { getParallelogramPoints, getDistance, getParallelogramArea } from './utils'
 
 describe(`Util functions are working correctly`, () => {
-  it(`${getParallelogramCords} should return array with 4 elements`, () => {
+  it(`${getParallelogramPoints} should return array with 4 elements`, () => {
     const threePoints = [
       { x: 1, y: 1 },
       { x: 44, y: 44 },
       { x: 100, y: 100 },
     ]
 
-    const [a, b, c, d] = getParallelogramCords(threePoints)
+    const [a, b, c, d] = getParallelogramPoints(threePoints)
 
     const distAB = getDistance(a, b)
     const distCD = getDistance(c, d)
