@@ -1,4 +1,4 @@
-import { POINTS_TO_DRAW_SHAPE, POINT_CIRCLE_DIAMETER } from './const'
+import { POINTS_TO_DRAW_SHAPE, POINT_CIRCLE_DIAMETER, POINT_CIRCLE_RADIUS } from './const'
 import { Canvas } from './canvas'
 import { View } from './view'
 import { State, Point } from './types'
@@ -86,11 +86,12 @@ export class App {
     const cursor = this.view.getCursorPosition(event)
 
     this.state.points.forEach((point, index) => {
-      const dx = cursor.x - point.x
-      const dy = cursor.y - point.y
-      const isIn = dx * dx + dy * dy < POINT_CIRCLE_DIAMETER
+      const dx = Math.abs(cursor.x - point.x)
+      const dy = Math.abs(cursor.y - point.y)
 
-      if (isIn) {
+      const selectedPoint = dx <= POINT_CIRCLE_DIAMETER && dy <= POINT_CIRCLE_DIAMETER
+
+      if (selectedPoint) {
         this.state.draggingPointIndex = index
       }
     })

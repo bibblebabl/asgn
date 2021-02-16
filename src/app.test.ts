@@ -4,6 +4,25 @@ jest.mock('./view')
 import { App } from './app'
 import { View } from './view'
 
+const updatePointsCoordinatesMock = [
+  {
+    cursorPosition: { x: 669, y: 463 },
+    draggingPointIndex: 2,
+    points: [
+      { x: 299, y: 376 },
+      { x: 654, y: 229 },
+      { x: 669, y: 463 },
+      { x: 314, y: 610 },
+    ],
+    expected: [
+      { x: 299, y: 376 },
+      { x: 654, y: 229 },
+      { x: 669, y: 463 },
+      { x: 314, y: 610 },
+    ],
+  },
+]
+
 describe(`App class methods`, () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -13,28 +32,20 @@ describe(`App class methods`, () => {
     it(`changes points coordinates if it has correct draggingPointIndex`, () => {
       const app = new App({} as HTMLCanvasElement)
 
-      const cursorPosition = { x: 669, y: 463 }
-      const draggingPointIndex = 2
+      for (const {
+        cursorPosition,
+        draggingPointIndex,
+        points,
+        expected,
+      } of updatePointsCoordinatesMock) {
+        app.state.draggingPointIndex = draggingPointIndex
 
-      app.state.draggingPointIndex = draggingPointIndex
+        app.state.points = points
 
-      app.state.points = [
-        { x: 299, y: 376 },
-        { x: 654, y: 229 },
-        { x: 669, y: 463 },
-        { x: 314, y: 610 },
-      ]
+        app.updatePointsCoordinates(cursorPosition)
 
-      app.updatePointsCoordinates(cursorPosition)
-
-      expect(app.state.points).toStrictEqual([
-        { x: 299, y: 376 },
-        { x: 654, y: 229 },
-        { x: 669, y: 463 },
-        { x: 314, y: 610 },
-      ])
-
-      return undefined
+        expect(app.state.points).toStrictEqual(expected)
+      }
     })
 
     it(`doesn't change points if draggingPointIndex is null`, () => {
@@ -114,15 +125,20 @@ describe(`App class methods`, () => {
       const app = new App({} as HTMLCanvasElement)
 
       const event = {
-        clientX: 635,
-        clientY: 494,
+        clientX: 562,
+        clientY: 555,
       }
 
+      jest.spyOn(View.prototype, 'getCursorPosition').mockReturnValue({
+        x: event.clientX,
+        y: event.clientY,
+      })
+
       app.state.points = [
-        { x: 205, y: 407 },
-        { x: 565, y: 176 },
-        { x: 699, y: 579 },
-        { x: 339, y: 810 },
+        { x: 174, y: 429 },
+        { x: 586, y: 218 },
+        { x: 562, y: 561 },
+        { x: 150, y: 772 },
       ]
 
       app.handleDrag(event as MouseEvent)

@@ -6,15 +6,16 @@ export class Canvas {
     return (Math.PI / 180) * degrees
   }
 
-  static create(): HTMLCanvasElement {
-    return document.createElement('canvas')
-  }
+  // static create(): HTMLCanvasElement {
+  //   return document.createElement('canvas')
+  // }
 
   private canvas: HTMLCanvasElement
   private ctx: CanvasRenderingContext2D
 
   constructor(element: HTMLCanvasElement) {
-    this.canvas = element || Canvas.create()
+    this.canvas = element
+    //  || Canvas.create()
     this.ctx = this.canvas.getContext('2d')
 
     this.init()
