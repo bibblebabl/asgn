@@ -8,9 +8,7 @@
     "build": "parcel build index.html",
     "test": "jest"
   },
-  "dependencies": {
-    "jest-canvas-mock": "^2.3.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/preset-typescript": "7.12.16",
     "@types/jest": "26.0.20",

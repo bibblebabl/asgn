@@ -1,7 +1,6 @@
-// jest.mock('./canvas')
-import 'jest-canvas-mock'
 import { View } from './view'
 import { Canvas } from './canvas'
+import { viewMocks } from './mocks/view.mock'
 
 const canvasElement = {
   getContext: jest.fn().mockReturnValue({
@@ -41,7 +40,7 @@ describe('View class method', () => {
 
     const result = view.getCursorPosition(event)
 
-    expect(result).toStrictEqual({ x: 11, y: 11 })
+    expect(result).toStrictEqual({ x: event.clientX, y: event.clientY })
   })
 
   it(`drawPoint should draw circle and tooltip`, () => {
@@ -60,19 +59,15 @@ describe('View class method', () => {
   })
 
   it(`drawParallelogram should call draw drawParallelogram`, () => {
-    const points = [
-      { x: 299, y: 376 },
-      { x: 654, y: 229 },
-      { x: 669, y: 463 },
-      { x: 314, y: 610 },
-    ]
-
     const mockedDrawParallelogram = jest.spyOn(Canvas.prototype, 'drawParallelogram')
 
-    view.drawParallelogram(points)
+    for (const mock of viewMocks.drawParallelogram) {
+      const points = mock.points
 
-    expect(mockedDrawParallelogram).toHaveBeenCalledTimes(1)
-    expect(mockedDrawParallelogram).toHaveBeenCalledWith(points)
+      view.drawParallelogram(points)
+
+      expect(mockedDrawParallelogram).toHaveBeenCalledWith(points)
+    }
   })
 
   it(`drawTooltip should draw tooltip with coordinates and index`, () => {
@@ -84,28 +79,22 @@ describe('View class method', () => {
   })
 
   it(`drawMainCircle should draw circle based on Parallelogram area`, () => {
-    const points = [
-      { x: 299, y: 376 },
-      { x: 654, y: 229 },
-      { x: 669, y: 463 },
-      { x: 314, y: 610 },
-    ]
+    for (const mock of viewMocks.drawMainCircle) {
+      const points = mock.points
 
-    const center = {
-      x: 484,
-      y: 419.5,
+      const center = mock.center
+
+      const mockedDrawCircle = jest.spyOn(Canvas.prototype, 'drawCircle')
+      const mockedDrawTooltip = jest.spyOn(view, 'drawTooltip')
+
+      view.drawMainCircle(points)
+
+      expect(mockedDrawCircle).toHaveBeenCalledWith({
+        ...center,
+        radius: mock.radius,
+      })
+      expect(mockedDrawTooltip).toHaveBeenCalledWith(center, 'CENTER')
     }
-
-    const mockedDrawCircle = jest.spyOn(Canvas.prototype, 'drawCircle')
-    const mockedDrawTooltip = jest.spyOn(view, 'drawTooltip')
-
-    view.drawMainCircle(points)
-
-    expect(mockedDrawCircle).toHaveBeenCalledWith({
-      ...center,
-      radius: 164.75398491181556,
-    })
-    expect(mockedDrawTooltip).toHaveBeenCalledWith(center, 'CENTER')
   })
 
   it(`reDraw should redraw shapes`, () => {
@@ -114,19 +103,16 @@ describe('View class method', () => {
     const mockedDrawPoint = jest.spyOn(view, 'drawPoint')
     const mockedDrawMainCircle = jest.spyOn(view, 'drawMainCircle')
 
-    const points = [
-      { x: 299, y: 376 },
-      { x: 654, y: 229 },
-      { x: 669, y: 463 },
-      { x: 314, y: 610 },
-    ]
+    for (const mock of viewMocks.reDraw) {
+      const points = mock.points
 
-    view.reDraw(points)
+      view.reDraw(points)
 
-    expect(mockedCanvasReset).toHaveBeenCalled()
-    expect(mockedDrawParallelogram).toHaveBeenCalled()
-    expect(mockedDrawPoint).toHaveBeenCalledTimes(4)
-    expect(mockedDrawMainCircle).toHaveBeenCalled()
+      expect(mockedCanvasReset).toHaveBeenCalled()
+      expect(mockedDrawParallelogram).toHaveBeenCalled()
+      expect(mockedDrawPoint).toHaveBeenCalled()
+      expect(mockedDrawMainCircle).toHaveBeenCalled()
+    }
   })
 
   it(`reset should reset canvas`, () => {

@@ -68,6 +68,10 @@ export class View {
       y: (a.y + c.y) / 2,
     }
 
+    console.log(JSON.stringify(points))
+    console.log(JSON.stringify(center))
+    console.log(JSON.stringify(circleRadius))
+
     this.canvas.drawCircle({
       x: center.x,
       y: center.y,
