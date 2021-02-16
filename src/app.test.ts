@@ -2,26 +2,8 @@ jest.mock('./canvas')
 jest.mock('./view')
 
 import { App } from './app'
+import { appMocks } from './mocks/app.mock'
 import { View } from './view'
-
-const updatePointsCoordinatesMock = [
-  {
-    cursorPosition: { x: 669, y: 463 },
-    draggingPointIndex: 2,
-    points: [
-      { x: 299, y: 376 },
-      { x: 654, y: 229 },
-      { x: 669, y: 463 },
-      { x: 314, y: 610 },
-    ],
-    expected: [
-      { x: 299, y: 376 },
-      { x: 654, y: 229 },
-      { x: 669, y: 463 },
-      { x: 314, y: 610 },
-    ],
-  },
-]
 
 describe(`App class methods`, () => {
   beforeEach(() => {
@@ -37,7 +19,7 @@ describe(`App class methods`, () => {
         draggingPointIndex,
         points,
         expected,
-      } of updatePointsCoordinatesMock) {
+      } of appMocks.updatePointsCoordinatesMock) {
         app.state.draggingPointIndex = draggingPointIndex
 
         app.state.points = points
@@ -99,24 +81,21 @@ describe(`App class methods`, () => {
       const mockedUpdatePointsCoordinates = jest.spyOn(app, 'updatePointsCoordinates')
       const mockedReDraw = jest.spyOn(View.prototype, 'reDraw')
 
-      app.state.points = [
-        { x: 299, y: 376 },
-        { x: 654, y: 229 },
-        { x: 669, y: 463 },
-        { x: 314, y: 610 },
-      ]
+      for (const mock of appMocks.onMouseMove) {
+        app.state.points = mock.points
 
-      app.state.isDragging = true
-      app.state.draggingPointIndex = 2
+        app.state.isDragging = true
+        app.state.draggingPointIndex = 2
 
-      app.onMouseMove({
-        clientX: 10,
-        clientY: 10,
-      } as MouseEvent)
+        app.onMouseMove({
+          clientX: 10,
+          clientY: 10,
+        } as MouseEvent)
 
-      expect(mockedGetCursorPosition).toHaveBeenCalled()
-      expect(mockedUpdatePointsCoordinates).toHaveBeenCalled()
-      expect(mockedReDraw).toHaveBeenCalled()
+        expect(mockedGetCursorPosition).toHaveBeenCalled()
+        expect(mockedUpdatePointsCoordinates).toHaveBeenCalled()
+        expect(mockedReDraw).toHaveBeenCalled()
+      }
     })
   })
 
@@ -124,26 +103,20 @@ describe(`App class methods`, () => {
     it(`should set dragging index of selected point`, () => {
       const app = new App({} as HTMLCanvasElement)
 
-      const event = {
-        clientX: 562,
-        clientY: 555,
+      for (const mocks of appMocks.handleDrag) {
+        const event = mocks.event
+
+        jest.spyOn(View.prototype, 'getCursorPosition').mockReturnValue({
+          x: event.clientX,
+          y: event.clientY,
+        })
+
+        app.state.points = mocks.points
+
+        app.handleDrag(event as MouseEvent)
+
+        expect(app.state.draggingPointIndex).toStrictEqual(mocks.expected)
       }
-
-      jest.spyOn(View.prototype, 'getCursorPosition').mockReturnValue({
-        x: event.clientX,
-        y: event.clientY,
-      })
-
-      app.state.points = [
-        { x: 174, y: 429 },
-        { x: 586, y: 218 },
-        { x: 562, y: 561 },
-        { x: 150, y: 772 },
-      ]
-
-      app.handleDrag(event as MouseEvent)
-
-      expect(app.state.draggingPointIndex).toStrictEqual(2)
     })
 
     it(`shouldn't set dragging index if event coords aren't close`, () => {
@@ -154,16 +127,18 @@ describe(`App class methods`, () => {
         clientY: 11,
       }
 
-      app.state.points = [
-        { x: 205, y: 407 },
-        { x: 565, y: 176 },
-        { x: 699, y: 579 },
-        { x: 339, y: 810 },
-      ]
+      for (const mocks of appMocks.handleDrag) {
+        jest.spyOn(View.prototype, 'getCursorPosition').mockReturnValue({
+          x: event.clientX,
+          y: event.clientY,
+        })
 
-      app.handleDrag(event as MouseEvent)
+        app.state.points = mocks.points
 
-      expect(app.state.draggingPointIndex).toStrictEqual(null)
+        app.handleDrag(event as MouseEvent)
+
+        expect(app.state.draggingPointIndex).toStrictEqual(null)
+      }
     })
   })
 })
