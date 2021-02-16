@@ -68,8 +68,6 @@ export class View {
       y: (a.y + c.y) / 2,
     }
 
-    console.log(center, circleRadius)
-
     this.canvas.drawCircle({
       x: center.x,
       y: center.y,

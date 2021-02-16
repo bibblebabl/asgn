@@ -45,12 +45,12 @@ export class App {
   onMouseDown(event: MouseEvent) {
     const { points, isDragging } = this.state
 
-    if (points.length < POINTS_TO_DRAW_SHAPE) {
+    if (this.state.points.length < POINTS_TO_DRAW_SHAPE) {
       const point = this.view.getCursorPosition(event)
       this.view.drawPoint(point, points.length)
       this.state.points.push(point)
 
-      if (points.length === POINTS_TO_DRAW_SHAPE) {
+      if (this.state.points.length === POINTS_TO_DRAW_SHAPE) {
         const [, , , lastPoint] = getParallelogramPoints(points)
         points.push(lastPoint)
         this.view.drawPoint(lastPoint, 3)

@@ -20,7 +20,9 @@ export function getParallelogramPoints(points: Point[]): Point[] {
   lastPoint.x = a.x + c.x - b.x
   lastPoint.y = a.y + c.y - b.y
 
-  return [...points, lastPoint]
+  const allPoints = [a, b, c, lastPoint]
+
+  return allPoints
 }
 
 export function getDistance(a: Point, b: Point): number {
@@ -30,6 +32,8 @@ export function getDistance(a: Point, b: Point): number {
 export function getParallelogramArea(points: Point[]): number {
   const [a, b, c, d] = points
 
+  console.log(JSON.stringify(points))
+
   const distAB = getDistance(a, b)
   const distBC = getDistance(b, c)
   const distBD = getDistance(b, d)
@@ -38,5 +42,6 @@ export function getParallelogramArea(points: Point[]): number {
   const p = (distAB + distBC + distBD) / 2
   const area = 2 * Math.sqrt(p * (p - distAB) * (p - distBC) * (p - distBD))
 
+  console.log(area)
   return area
 }
