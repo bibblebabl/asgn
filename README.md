@@ -7,4 +7,4 @@ bug, feel free to contact us at: [belogurovigor@gmail.com](belogurovigor@gmail.c
 
 ## TODO
 
-- Cover all classes with tests
+- Cover Canvas class with tests
