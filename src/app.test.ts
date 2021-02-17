@@ -33,8 +33,6 @@ describe(`App class methods`, () => {
     it(`doesn't change points if draggingPointIndex is null`, () => {
       const app = new App({} as HTMLCanvasElement)
 
-      app.state.draggingPointIndex === null
-
       app.updatePointsCoordinates({ x: 0, y: 0 })
 
       expect(app.state.points).toStrictEqual([])
